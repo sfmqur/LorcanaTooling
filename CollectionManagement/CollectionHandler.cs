@@ -3,7 +3,7 @@ using Microsoft.VisualBasic.FileIO;
 
 namespace CollectionManagement
 {
-    public class CardHandler : ICardHandler
+    public class CollectionHandler : ICollectionHandler
     {
         public Dictionary<int, Dictionary<int, ICard>> Cards { get; }
 
@@ -11,7 +11,7 @@ namespace CollectionManagement
         ///
         /// </summary>
         /// <param name="numSets">Number of sets in Lorcana</param>
-        public CardHandler(int numSets)
+        public CollectionHandler(int numSets)
         {
             Cards = new Dictionary<int, Dictionary<int, ICard>>();
             for (int set = 1; set <= numSets; set++) // initialize set dictionaries

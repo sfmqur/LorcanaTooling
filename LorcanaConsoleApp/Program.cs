@@ -7,7 +7,7 @@ namespace LorcanaConsoleApp
         static void Main(string[] args)
         {
             var numSets = 2;
-            var ch = new CardHandler(numSets);
+            var ch = new CollectionHandler(numSets);
             var filePath = "C:\\Users\\Sam\\Downloads\\export.csv";
             var filePath2 = "C:\\Users\\Sam\\Downloads\\export(1).csv";
 
