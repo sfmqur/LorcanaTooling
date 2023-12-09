@@ -1,4 +1,5 @@
 ﻿using CollectionManagement.Contracts;
+using Microsoft.VisualBasic.FileIO;
 
 namespace CollectionManagement
 {
@@ -7,15 +8,15 @@ namespace CollectionManagement
         public Dictionary<int, Dictionary<int, ICard>> Cards { get; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="numSets">Number of sets in Lorcana</param>
         public CardHandler(int numSets)
         {
-            Cards = new Dictionary<int, Dictionary<int, ICard>> ();
+            Cards = new Dictionary<int, Dictionary<int, ICard>>();
             for (int set = 1; set <= numSets; set++) // initialize set dictionaries
             {
-                Cards[set] = new Dictionary<int, ICard> ();
+                Cards[set] = new Dictionary<int, ICard>();
             }
         }
 
@@ -23,11 +24,12 @@ namespace CollectionManagement
         /// Takes a collection file path as input, edits the file to turn price sections into decimals
         /// </summary>
         /// <param name="collectionFilePath"></param>
-        public void CleanCollectionFile(string collectionFilePath)
+        public List<string[]> CleanCollectionFile(string collectionFilePath)
         {
+            var lines = new List<string[]>();
             if (File.Exists(collectionFilePath))
             {
-                var lines = collectionFileToCleanLineArr(collectionFilePath);
+                lines = collectionFileToCleanLineArr(collectionFilePath);
                 using (var fs = File.CreateText(collectionFilePath))
                 {
                     foreach (var line in lines)
@@ -41,12 +43,70 @@ namespace CollectionManagement
             {
                 Console.WriteLine($"{collectionFilePath} does not exist.");
             }
-        }   
+            return lines;
+        }
 
-        public void  LoadCollectionFile(string collectionFilePath) //todo
+        public void LoadCollectionFile(string collectionFilePath) //todo
         {
-            var lines = collectionFileToCleanLineArr(collectionFilePath); 
-            throw new NotImplementedException();
+            var lines = collectionFileToCleanLineArr(collectionFilePath);
+            var set = Int32.Parse(lines[1][3]);
+            foreach (var line in lines)
+            {
+                int cardNo;
+                var cardNoResult = Int32.TryParse(line[4], out cardNo);
+
+                if (line[0] != "Normal" && cardNoResult)
+                {
+                    decimal tempPrice;
+                    if (line[6][0..3] == "Sup")
+                    {
+                        line[6] = "SuperRare"; 
+                    }
+                    Cards[set][cardNo] = new Card(
+                        line[2], set, cardNo,
+                        (Color) Enum.Parse(typeof(Color), line[5]),
+                        (Rarity) Enum.Parse(typeof(Rarity), line[6]),
+                        Int32.Parse(line[0]),
+                        Int32.Parse(line[1]),
+                        decimal.TryParse(line[7], out tempPrice) ? tempPrice : 0,
+                        decimal.TryParse(line[8], out tempPrice) ? tempPrice : 0
+                        ) ;
+                }
+            }
+        }
+
+        public void PrintCollectionStats()
+        {
+            foreach (var set in Cards.Keys)
+            {
+                Console.WriteLine($"Set  {set} stats:");
+                Console.WriteLine($"Rare\t\tTotal\tRemain");
+                decimal sumTotalPriceSet = 0;
+                decimal sumPriceRemainingSet = 0;
+                foreach (var rarity in Enum.GetValues(typeof(Rarity)))
+                {
+                    var cardsKVPairs = Cards[set].Where(cardKVPair => cardKVPair.Value.Rarity == (Rarity) rarity);
+
+                    decimal sumTotalPrice = 0;
+                    decimal sumPriceRemaining = 0;
+                    foreach (var cardKV in cardsKVPairs)
+                    {
+                        sumTotalPrice += 4 * cardKV.Value.Price;
+                        var quant = cardKV.Value.QuantNormal + cardKV.Value.QuantFoil;
+                        sumPriceRemaining += quant >= 4 ? 0 : (4 - quant) * cardKV.Value.Price;
+                    }
+                    sumTotalPriceSet += sumTotalPrice;
+                    sumPriceRemainingSet += sumPriceRemaining;
+
+                    var tabstring = (Rarity)rarity == Rarity.Uncommon || (Rarity)rarity == Rarity.SuperRare 
+                        || (Rarity)rarity == Rarity.Legendary || (Rarity)rarity == Rarity.Enchanted ? "\t" : "\t\t";
+                    Console.WriteLine($"{(Rarity) rarity}:{tabstring}{sumTotalPrice}\t{sumPriceRemaining}");
+                }
+                
+                Console.WriteLine($"Total:\t\t{sumTotalPriceSet}\t{sumPriceRemainingSet}");
+                Console.WriteLine("");
+
+            }
         }
 
         /// <summary>
@@ -99,8 +159,8 @@ namespace CollectionManagement
         private int getNumberLength(string stringIn, int startIndex)
         {
             int length = 0;
-            var charList = new List<char> { '0','1','2','3','4','5', '6', '7', '8', '9', '.', ','};
-            for( int i = startIndex; i < stringIn.Length; i++ )
+            var charList = new List<char> { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ',' };
+            for (int i = startIndex; i < stringIn.Length; i++)
             {
                 if (charList.Contains(stringIn[i]))
                 {

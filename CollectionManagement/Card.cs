@@ -24,8 +24,10 @@ namespace CollectionManagement
         public string Text { get  ; set  ; }
         public CardType Type { get  ; set  ; }
         public string TypeText { get  ; set  ; }
+        public int QuantNormal { get; set; }
+        public int QuantFoil { get; set; }
 
-        public Card(string name, int set, int cardNo, Color color, Rarity rarity, decimal price=0, decimal foilPrice=0) {
+        public Card(string name, int set, int cardNo, Color color, Rarity rarity, int quantNorm, int quantFoil, decimal price=0, decimal foilPrice=0) {
             Name = name;
             Set = set;
             CardNo = cardNo;
@@ -33,6 +35,8 @@ namespace CollectionManagement
             Rarity = rarity;
             Price = price;
             PriceFoil = foilPrice;
+            QuantNormal = quantNorm;
+            QuantFoil = quantFoil;
             Text = "";
             TypeText = "";
         }

@@ -4,6 +4,7 @@
     {
         public Dictionary<int,Dictionary<int,ICard>> Cards { get; } // keys: setno, cardno
         public void LoadCollectionFile(string collectionFilePath);
-        public void CleanCollectionFile(string collectionFilePath);
+        public List<string[]> CleanCollectionFile(string collectionFilePath);
+
     }
 }
