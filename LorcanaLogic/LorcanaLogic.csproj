@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CollectionManagement.Contracts\CollectionManagement.Contracts.csproj" />
+    <ProjectReference Include="..\LorcanaLogic.Contracts\LorcanaLogic.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

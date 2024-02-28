@@ -1,4 +1,4 @@
-﻿namespace CollectionManagement.Contracts
+﻿namespace LorcanaLogic.Contracts
 {
     public interface ISetPullrates
     { // pull rates are number of each rarity in a 24 set box. 

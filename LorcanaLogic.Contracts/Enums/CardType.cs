@@ -1,4 +1,4 @@
-﻿namespace CollectionManagement.Contracts
+﻿namespace LorcanaLogic.Contracts
 {
     public enum CardType
     {

@@ -1,6 +1,6 @@
-﻿using CollectionManagement.Contracts;
+﻿using LorcanaLogic.Contracts;
 
-namespace CollectionManagement
+namespace LorcanaLogic
 {
     public class Card : ICard
     {

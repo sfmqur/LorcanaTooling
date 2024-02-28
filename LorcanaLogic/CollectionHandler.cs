@@ -1,7 +1,7 @@
-﻿using CollectionManagement.Contracts;
+﻿using LorcanaLogic.Contracts;
 using Microsoft.VisualBasic.FileIO;
 
-namespace CollectionManagement
+namespace LorcanaLogic
 {
     public class CollectionHandler : ICollectionHandler
     {

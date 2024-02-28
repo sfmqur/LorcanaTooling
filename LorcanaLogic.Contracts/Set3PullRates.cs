@@ -1,6 +1,6 @@
 ﻿// source: https://www.reddit.com/r/Lorcana/comments/1axc1jf/into_the_ink_lands_8_cases_768_booster_packs/
 // opened 768 boxes
-namespace CollectionManagement.Contracts
+namespace LorcanaLogic.Contracts
 {
     public  class Set3PullRates : ISetPullrates
     { 
