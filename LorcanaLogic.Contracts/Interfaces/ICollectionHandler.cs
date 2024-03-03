@@ -2,9 +2,10 @@
 {
     public interface ICollectionHandler
     {
-        public Dictionary<int,Dictionary<int,ICard>> Cards { get; } // keys: setno, cardno
-        public void LoadCollectionFile(string collectionFilePath);
-        public List<string[]> CleanCollectionFile(string collectionFilePath);
-
+        Dictionary<int,Dictionary<int,ICard>> Cards { get; } // keys: setno, cardno
+        void LoadCollectionFile(string collectionFilePath);
+        List<string[]> CleanCollectionFile(string collectionFilePath);
+        void SaveCollectionFile();
+        void PrintCollectionStats();
     }
 }

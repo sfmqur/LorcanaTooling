@@ -6,14 +6,11 @@ namespace LorcanaConsoleApp
     {
         static void Main(string[] args)
         {
-            var numSets = 3;
-            var ch = new CollectionHandler(numSets);
-            var filePath = "C:\\Users\\Sam\\Downloads\\export(2).csv";
-            var filePath2 = "C:\\Users\\Sam\\Downloads\\export(3).csv";
+            var ch = new CollectionHandler();
+            //ch.LoadCollectionFile("C:\\Users\\Sam\\Downloads\\export.csv");
 
-            ch.LoadCollectionFile(filePath);
-            ch.LoadCollectionFile(filePath2);
             ch.PrintCollectionStats();
+            ch.SaveCollectionFile();
         }
     }
 }

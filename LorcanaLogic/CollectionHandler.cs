@@ -5,18 +5,22 @@ namespace LorcanaLogic
 {
     public class CollectionHandler : ICollectionHandler
     {
+        public const int NumSets = 3; 
         public Dictionary<int, Dictionary<int, ICard>> Cards { get; }
 
         /// <summary>
         ///
         /// </summary>
         /// <param name="numSets">Number of sets in Lorcana</param>
-        public CollectionHandler(int numSets)
+        public CollectionHandler()
         {
-            Cards = new Dictionary<int, Dictionary<int, ICard>>();
-            for (int set = 1; set <= numSets; set++) // initialize set dictionaries
+            Cards = CollectionJsonHandler.GetCards();
+            for (int set = 1; set <= NumSets; set++) // initialize set dictionaries
             {
-                Cards[set] = new Dictionary<int, ICard>();
+                if (!Cards.ContainsKey(set))
+                {
+                    Cards[set] = new Dictionary<int, ICard>();
+                }
             }
         }
 
@@ -46,10 +50,9 @@ namespace LorcanaLogic
             return lines;
         }
 
-        public void LoadCollectionFile(string collectionFilePath) //todo
+        public void LoadCollectionFile(string collectionFilePath) // todo LoadCollectionFile
         {
             var lines = collectionFileToCleanLineArr(collectionFilePath);
-            var set = Int32.Parse(lines[1][3]);
             foreach (var line in lines)
             {
                 int cardNo;
@@ -57,22 +60,38 @@ namespace LorcanaLogic
 
                 if (line[0] != "Normal" && cardNoResult)
                 {
+                    var set = Int32.Parse(line[3]);
                     decimal tempPrice;
                     if (line[6][0..3] == "Sup")
                     {
                         line[6] = "SuperRare"; 
                     }
-                    Cards[set][cardNo] = new Card(
-                        line[2], set, cardNo,
-                        (Color) Enum.Parse(typeof(Color), line[5]),
-                        (Rarity) Enum.Parse(typeof(Rarity), line[6]),
-                        Int32.Parse(line[0]),
-                        Int32.Parse(line[1]),
-                        decimal.TryParse(line[7], out tempPrice) ? tempPrice : 0,
-                        decimal.TryParse(line[8], out tempPrice) ? tempPrice : 0
-                        ) ;
+                    if (Cards[set].ContainsKey(cardNo))
+                    {
+                        Cards[set][cardNo].QuantNormal = Int32.Parse(line[0]);
+                        Cards[set][cardNo].QuantFoil = Int32.Parse(line[1]);
+                        Cards[set][cardNo].Price = decimal.TryParse(line[7], out tempPrice) ? tempPrice : 0;
+                        Cards[set][cardNo].PriceFoil = decimal.TryParse(line[8], out tempPrice) ? tempPrice : 0;
+                    }
+                    else
+                    {
+                        Cards[set][cardNo] = new Card(
+                        line[2], set, cardNo, //name, set, cardno
+                        (Color)Enum.Parse(typeof(Color), line[5]),
+                        (Rarity)Enum.Parse(typeof(Rarity), line[6]),
+                        Int32.Parse(line[0]), //quant norm
+                        Int32.Parse(line[1]), //quant foil
+                        decimal.TryParse(line[7], out tempPrice) ? tempPrice : 0, //price
+                        decimal.TryParse(line[8], out tempPrice) ? tempPrice : 0 // foil price
+                        );
+                    }
                 }
             }
+        }
+
+        public void SaveCollectionFile()
+        {
+            CollectionJsonHandler.SaveCollectionFile(Cards);
         }
 
         public void PrintCollectionStats()
