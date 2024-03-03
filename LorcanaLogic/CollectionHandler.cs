@@ -5,7 +5,6 @@ namespace LorcanaLogic
 {
     public class CollectionHandler : ICollectionHandler
     {
-        public const int NumSets = 3; 
         public Dictionary<int, Dictionary<int, ICard>> Cards { get; }
 
         /// <summary>
@@ -15,13 +14,6 @@ namespace LorcanaLogic
         public CollectionHandler()
         {
             Cards = CollectionJsonHandler.GetCards();
-            for (int set = 1; set <= NumSets; set++) // initialize set dictionaries
-            {
-                if (!Cards.ContainsKey(set))
-                {
-                    Cards[set] = new Dictionary<int, ICard>();
-                }
-            }
         }
 
         /// <summary>
@@ -61,6 +53,10 @@ namespace LorcanaLogic
                 if (line[0] != "Normal" && cardNoResult)
                 {
                     var set = Int32.Parse(line[3]);
+                    if (!Cards.ContainsKey(set))
+                    {
+                        Cards[set] = new Dictionary<int, ICard>();
+                    }
                     decimal tempPrice;
                     if (line[6][0..3] == "Sup")
                     {
