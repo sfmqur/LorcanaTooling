@@ -44,5 +44,35 @@ namespace LorcanaLogic.Contracts
         {
             return GetBoxPullrate(rarity, foil)/24;
         }
+
+        public double GetSlotProbability(Rarity rarity, bool foil = false)
+        {
+            if (foil)
+            {
+                switch(rarity)
+                {
+                    case Rarity.Common: return CommonFoilPerBox / 24; 
+                    case Rarity.Uncommon: return UncommonFoilPerBox / 24;
+                    case Rarity.Rare: return RareFoilPerBox / 24;
+                    case Rarity.SuperRare: return SuperRareFoilPerBox / 24;
+                    case Rarity.Legendary: return LegendaryFoilPerBox / 24;
+                    case Rarity.Enchanted: return EnchantedPerBox / 24;
+                    default: return 0;
+                }
+            }
+            else
+            {
+                switch (rarity)
+                {
+                    case Rarity.Common: return CommonsPerBox / 24/6;
+                    case Rarity.Uncommon: return UncommonsPerBox / 24/3;
+                    case Rarity.Rare: return RaresPerBox / 24/2;
+                    case Rarity.SuperRare: return SuperRaresPerBox / 24/2;
+                    case Rarity.Legendary: return LegendarysPerBox / 24/2;
+                    case Rarity.Enchanted: return EnchantedPerBox / 24;
+                    default: return 0;
+                }
+            }
+        }
     }
 }

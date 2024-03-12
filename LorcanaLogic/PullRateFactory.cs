@@ -15,7 +15,7 @@ namespace LorcanaLogic
             _set3Rates = new Set3PullRates();
         }
 
-        private ISetPullrates GetSetPullrates(int set)
+        public ISetPullrates GetSetPullrates(int set)
         {
             switch (set)
             {

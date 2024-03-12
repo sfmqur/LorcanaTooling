@@ -29,5 +29,12 @@
         /// <param name="foil"></param>
         /// <returns></returns>
         double GetPackPullrate(Rarity rarity, bool foil = false);
+        /// <summary>
+        /// probability of rarity in a slot that could have that rarity
+        /// </summary>
+        /// <param name="rarity"></param>
+        /// <param name="foil"></param>
+        /// <returns></returns>
+        double GetSlotProbability(Rarity rarity, bool foil = false);
     }
 }
