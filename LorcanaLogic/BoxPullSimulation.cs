@@ -55,11 +55,11 @@ namespace LorcanaLogic
             }
             for (var i = 0; i < 2; i++) //roll rare slots
             {
-                ref Card[] raresArr = ref getRareSlotCardsArray();
+                Card[] raresArr = getRareSlotCardsArray();
                 var choice = _rand.Next(0, raresArr.Length - 1);
                 pack[fillPointer++] = raresArr[choice];
             }
-            ref Card[] foilArr = ref getFoilSlotCardsArray();
+            Card[] foilArr = getFoilSlotCardsArray();
             var choicefoil = _rand.Next(0, foilArr.Length - 1);
             pack[fillPointer++] = foilArr[choicefoil];
             return pack; 
@@ -69,51 +69,51 @@ namespace LorcanaLogic
         /// rolls a rarity for a rare slot, returns reference to array of that rarity's cards. 
         /// </summary>
         /// <returns></returns>
-        private ref Card[] getRareSlotCardsArray() // todo unit test against pull rates. 
+        private Card[] getRareSlotCardsArray() // todo unit test against pull rates. 
         {
             var prob = _rand.NextDouble();
             var lowerThreshold = 0.0;
             if (prob < _pullrates.GetSlotProbability(Rarity.Rare)) 
             {
-                return ref _rares; 
+                return _rares; 
             }
             lowerThreshold += _pullrates.GetSlotProbability(Rarity.Rare);
             if (lowerThreshold <= prob && prob < _pullrates.GetSlotProbability(Rarity.SuperRare) + lowerThreshold)
             {
-                return ref _superRares;
+                return _superRares;
             }
-            return ref _legendaries;
+            return _legendaries;
         }
 
-        private ref Card[] getFoilSlotCardsArray() // todo unit test this and validate against set pull rates. 
+        private Card[] getFoilSlotCardsArray() // todo unit test this and validate against set pull rates. 
         {
             var prob = _rand.NextDouble();
             var lowerThreshold = 0.0;
             if (prob < _pullrates.GetSlotProbability(Rarity.Common, true))
             {
-                return ref _commons;
+                return _commons;
             }
             lowerThreshold += _pullrates.GetSlotProbability(Rarity.Common, true);
             if (lowerThreshold <= prob && prob < _pullrates.GetSlotProbability(Rarity.Uncommon, true) + lowerThreshold)
             {
-                return ref _uncommons;
+                return _uncommons;
             }
             lowerThreshold += _pullrates.GetSlotProbability(Rarity.Uncommon, true);
             if (lowerThreshold <= prob && prob < _pullrates.GetSlotProbability(Rarity.Rare, true) + lowerThreshold)
             {
-                return ref _rares;
+                return _rares;
             }
             lowerThreshold += _pullrates.GetSlotProbability(Rarity.Rare, true);
             if (lowerThreshold <= prob && prob < _pullrates.GetSlotProbability(Rarity.SuperRare, true) + lowerThreshold)
             {
-                return ref _superRares;
+                return _superRares;
             }
             lowerThreshold += _pullrates.GetSlotProbability(Rarity.SuperRare, true);
             if (lowerThreshold <= prob && prob < _pullrates.GetSlotProbability(Rarity.Legendary, true) + lowerThreshold)
             {
-                return ref _legendaries;
+                return _legendaries;
             }
-            return ref _enchanteds;
+            return _enchanteds;
         }
             private static Card[] selectRarity(int set, Dictionary<int, Dictionary<int, Card>> cards, Rarity rarity)
         {
