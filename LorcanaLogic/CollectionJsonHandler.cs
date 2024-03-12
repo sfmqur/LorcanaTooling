@@ -7,7 +7,7 @@ namespace LorcanaLogic
     {
         private const string collectionFileName = "lorcana_collection.json";
 
-        public static void SaveCollectionFile(Dictionary<int, Dictionary<int, ICard>> collection)
+        public static void SaveCollectionFile(Dictionary<int, Dictionary<int, Card>> collection)
         {
             var fileString = JsonConvert.SerializeObject(collection, Formatting.Indented);
             using (var fs = File.CreateText(collectionFileName))
@@ -16,7 +16,7 @@ namespace LorcanaLogic
             }
         }
 
-        public static Dictionary<int, Dictionary<int, ICard>> GetCards()
+        public static Dictionary<int, Dictionary<int, Card>> GetCards()
         {
             if (File.Exists(collectionFileName))
             {
@@ -28,22 +28,13 @@ namespace LorcanaLogic
                 var importDict = JsonConvert.DeserializeObject< Dictionary<int, Dictionary<int, Card>>>(fileString);
                 if (importDict == null)
                 {
-                    return new Dictionary<int, Dictionary<int, ICard>>();
+                    return new Dictionary<int, Dictionary<int, Card>>();
                 }
-                var tempDict = new Dictionary<int, Dictionary<int, ICard>>();
-                foreach (var set in importDict.Keys) //need this double for to rectify the type. differences, wasn't able to deserialize as ICard. 
-                {
-                    tempDict[set] = new Dictionary<int, ICard>();
-                    foreach (var cardNo in importDict[set].Keys)
-                    {
-                        tempDict[set][cardNo] = importDict[set][cardNo];
-                    }
-                }
-                return tempDict; 
+                return importDict; 
             }
             else
             {
-                return new Dictionary<int, Dictionary<int, ICard>>();
+                return new Dictionary<int, Dictionary<int, Card>>();
             }
         }
     }

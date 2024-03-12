@@ -2,7 +2,7 @@
 {
     public interface ICollectionHandler
     {
-        Dictionary<int,Dictionary<int,ICard>> Cards { get; } // keys: setno, cardno
+        Dictionary<int,Dictionary<int,Card>> Cards { get; } // keys: setno, cardno
         void LoadCollectionFile(string collectionFilePath);
         List<string[]> CleanCollectionFile(string collectionFilePath);
         void SaveCollectionFile();

@@ -1,9 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System.Text;
 using LorcanaLogic.Contracts;
 
 namespace LorcanaLogic
 {
-    public class Card : ICard
+    public class Card 
     {
         public string Name { get; }
 
@@ -56,6 +56,14 @@ namespace LorcanaLogic
             }
             return (obj as Card)?.Set == Set && (obj as Card)?.CardNo == CardNo;
         }
+
+        public override int GetHashCode()
+        {
+            var crc = new Crc32();
+            var hashingString = Encoding.ASCII.GetBytes($"{Name}{Set}{CardNo}{Color}{Rarity}");
+            return (int)crc.Get(hashingString);
+        }
+
         public static bool operator <(Card card1, Card card2)
         {
             if (card1.Equals(card2)) return false;
@@ -84,5 +92,7 @@ namespace LorcanaLogic
             if (card1.Equals(card2)) return true;
             return card1 > card2;
         }
+
+        
     }
 }

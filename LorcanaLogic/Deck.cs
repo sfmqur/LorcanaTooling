@@ -6,14 +6,14 @@ namespace LorcanaLogic
     {
         public string Name { get; }
 
-        public List<ICard> CardList { get; }
+        public List<Card> CardList { get; }
 
         public List<int> CardQuantity { get; }
 
         public Deck(string deckListPath)
         {
             Name = deckListPath.Substring(deckListPath.LastIndexOf("\\"), deckListPath.LastIndexOf('.'));
-            CardList = new List<ICard>();
+            CardList = new List<Card>();
             CardQuantity = new List<int>();
             importDeckFromDreambornExport(deckListPath);
         }

@@ -3,7 +3,7 @@
     public interface IDeck
     {
         string Name { get; }
-        List<ICard> CardList { get; }
+        List<Card> CardList { get; }
         List<int> CardQuantity { get; }
 
         string Diff(IDeck other);

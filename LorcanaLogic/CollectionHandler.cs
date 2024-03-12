@@ -5,7 +5,7 @@ namespace LorcanaLogic
 {
     public class CollectionHandler : ICollectionHandler
     {
-        public Dictionary<int, Dictionary<int, ICard>> Cards { get; }
+        public Dictionary<int, Dictionary<int, Card>> Cards { get; }
 
         /// <summary>
         ///
@@ -55,7 +55,7 @@ namespace LorcanaLogic
                     var set = Int32.Parse(line[3]);
                     if (!Cards.ContainsKey(set))
                     {
-                        Cards[set] = new Dictionary<int, ICard>();
+                        Cards[set] = new Dictionary<int, Card>();
                     }
                     decimal tempPrice;
                     if (line[6][0..3] == "Sup")
