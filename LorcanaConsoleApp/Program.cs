@@ -10,7 +10,7 @@ namespace LorcanaConsoleApp
             //ch.LoadCollectionFile("C:\\Users\\Sam\\Downloads\\export.csv");
 
             var boxSim = new BoxPullSimulation(3,ch.Cards);
-            boxSim.PullPack();
+            boxSim.PullBox();
 
             
             ch.SaveCollectionFile();

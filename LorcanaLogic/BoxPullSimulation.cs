@@ -66,6 +66,27 @@ namespace LorcanaLogic
         }
 
         /// <summary>
+        /// returns an array of pulled non foil cards, and an array of foil cards.
+        /// </summary>
+        /// <returns></returns>
+        public (Card[], Card[]) PullBox()
+        {
+            var cards = new Card[11 * 24];
+            var cardsFilledPointer = 0; 
+            var foils = new Card[24];
+            var foilsFilledPointer = 0;
+
+            for (var i = 0; i < 24; i++)
+            {
+                var pack = PullPack();
+                Array.Copy(pack, 0, cards,cardsFilledPointer, 11);
+                cardsFilledPointer += 11;
+                foils[foilsFilledPointer++] = pack[11];
+            }
+            return (cards, foils);
+        }
+
+        /// <summary>
         /// rolls a rarity for a rare slot, returns reference to array of that rarity's cards. 
         /// </summary>
         /// <returns></returns>
