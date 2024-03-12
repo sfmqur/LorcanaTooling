@@ -86,6 +86,20 @@ namespace LorcanaLogic
             return (cards, foils);
         }
 
+        public decimal CalcBoxValue(Card[] cards, Card[] foils)
+        {
+            decimal value = 0;
+            foreach (var card in cards)
+            {
+                value += card.Price;
+            }
+            foreach (var foil in foils)
+            {
+                value += foil.PriceFoil;
+            }
+            return value; 
+        }
+
         /// <summary>
         /// rolls a rarity for a rare slot, returns reference to array of that rarity's cards. 
         /// </summary>
