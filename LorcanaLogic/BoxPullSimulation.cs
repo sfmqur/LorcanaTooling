@@ -87,11 +87,11 @@ namespace LorcanaLogic
         }
 
         /// <summary>
-        /// Return arrays of  average val, stdev. 100,000 boxes max
+        /// Return arrays of  average val, stdev, values list. 100,000 boxes max
         /// </summary>
         /// <param name="numBoxes"></param>
         /// <returns></returns>
-        public (decimal, decimal) PullBoxes(int numBoxes)
+        public (decimal, decimal, List<decimal>) PullBoxes(int numBoxes)
         {
             var upperLimit = 100000;
             if (numBoxes > upperLimit) // to not suck up too much memory
@@ -116,7 +116,7 @@ namespace LorcanaLogic
                 stDev += dev;
             }
             stDev = stDev / values.Count();
-            return (avg, stDev);
+            return (avg, stDev, values);
         }
 
         public decimal CalcBoxValue(Card[] cards, Card[] foils)
