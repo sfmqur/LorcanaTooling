@@ -17,7 +17,7 @@ namespace LorcanaLogic
         private Card[] _superRares;
         private Card[] _legendaries;
         private Card[] _enchanteds;
-        private Random _rand; 
+        private Random _rand;
 
         public BoxPullSimulation(int set, Dictionary<int, Dictionary<int, Card>> cards)
         {
@@ -35,17 +35,17 @@ namespace LorcanaLogic
         }
 
         /// <summary>
-        /// arrary of cards in pack, last card is a foil. 
+        /// arrary of cards in pack, last card is a foil.
         /// </summary>
         /// <returns></returns>
-        public Card[] PullPack() 
+        public Card[] PullPack()
         {
             var pack = new Card[12];
             var fillPointer = 0;
-            
-            for (var i=0; i < 6; i++) //roll commons
+
+            for (var i = 0; i < 6; i++) //roll commons
             {
-                var choice = _rand.Next(0, _commons.Length-1);
+                var choice = _rand.Next(0, _commons.Length - 1);
                 pack[fillPointer++] = _commons[choice];
             }
             for (var i = 0; i < 3; i++) //roll uncommons
@@ -62,7 +62,7 @@ namespace LorcanaLogic
             Card[] foilArr = getFoilSlotCardsArray();
             var choicefoil = _rand.Next(0, foilArr.Length - 1);
             pack[fillPointer++] = foilArr[choicefoil];
-            return pack; 
+            return pack;
         }
 
         /// <summary>
@@ -72,18 +72,51 @@ namespace LorcanaLogic
         public (Card[], Card[]) PullBox()
         {
             var cards = new Card[11 * 24];
-            var cardsFilledPointer = 0; 
+            var cardsFilledPointer = 0;
             var foils = new Card[24];
             var foilsFilledPointer = 0;
 
             for (var i = 0; i < 24; i++)
             {
                 var pack = PullPack();
-                Array.Copy(pack, 0, cards,cardsFilledPointer, 11);
+                Array.Copy(pack, 0, cards, cardsFilledPointer, 11);
                 cardsFilledPointer += 11;
                 foils[foilsFilledPointer++] = pack[11];
             }
             return (cards, foils);
+        }
+
+        /// <summary>
+        /// Return arrays of  average val, stdev. 100,000 boxes max
+        /// </summary>
+        /// <param name="numBoxes"></param>
+        /// <returns></returns>
+        public (decimal, decimal) PullBoxes(int numBoxes)
+        {
+            var upperLimit = 100000;
+            if (numBoxes > upperLimit) // to not suck up too much memory
+            {
+                throw new ArgumentOutOfRangeException($"{nameof(numBoxes)} greater than allowed {upperLimit}");
+            }
+            var values = new List<decimal>();
+            for (var i = 0; i < numBoxes; i++)
+            {
+                var (pullcards, pullfoils) = PullBox();
+                var value = CalcBoxValue(pullcards, pullfoils);
+                values.Add(value);
+            }
+            var avg = values.Average();
+            decimal stDev = 0;
+
+            foreach (var value in values)
+            {
+                var dev = value - avg;
+                if (dev < 0)
+                    dev *= -1;
+                stDev += dev;
+            }
+            stDev = stDev / values.Count();
+            return (avg, stDev);
         }
 
         public decimal CalcBoxValue(Card[] cards, Card[] foils)
@@ -97,20 +130,20 @@ namespace LorcanaLogic
             {
                 value += foil.PriceFoil;
             }
-            return value; 
+            return value;
         }
 
         /// <summary>
-        /// rolls a rarity for a rare slot, returns reference to array of that rarity's cards. 
+        /// rolls a rarity for a rare slot, returns reference to array of that rarity's cards.
         /// </summary>
         /// <returns></returns>
-        private Card[] getRareSlotCardsArray() // todo unit test against pull rates. 
+        private Card[] getRareSlotCardsArray() // todo unit test against pull rates.
         {
             var prob = _rand.NextDouble();
             var lowerThreshold = 0.0;
-            if (prob < _pullrates.GetSlotProbability(Rarity.Rare)) 
+            if (prob < _pullrates.GetSlotProbability(Rarity.Rare))
             {
-                return _rares; 
+                return _rares;
             }
             lowerThreshold += _pullrates.GetSlotProbability(Rarity.Rare);
             if (lowerThreshold <= prob && prob < _pullrates.GetSlotProbability(Rarity.SuperRare) + lowerThreshold)
@@ -120,7 +153,7 @@ namespace LorcanaLogic
             return _legendaries;
         }
 
-        private Card[] getFoilSlotCardsArray() // todo unit test this and validate against set pull rates. 
+        private Card[] getFoilSlotCardsArray() // todo unit test this and validate against set pull rates.
         {
             var prob = _rand.NextDouble();
             var lowerThreshold = 0.0;
@@ -150,7 +183,8 @@ namespace LorcanaLogic
             }
             return _enchanteds;
         }
-            private static Card[] selectRarity(int set, Dictionary<int, Dictionary<int, Card>> cards, Rarity rarity)
+
+        private static Card[] selectRarity(int set, Dictionary<int, Dictionary<int, Card>> cards, Rarity rarity)
         {
             return cards[set].Where(cardKeyVal => cardKeyVal.Value.Rarity == rarity)
                 .Select(carkKeyVal => carkKeyVal.Value).ToArray() ?? throw new ArgumentNullException($"set{set} {rarity}");
