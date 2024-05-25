@@ -7,7 +7,7 @@ namespace LorcanaConsoleApp
         static void Main(string[] args)
         {
             var ch = new CollectionHandler();
-            //ch.LoadCollectionFile("C:\\Users\\Sam\\Downloads\\export.csv");
+            ch.LoadCollectionFile("C:\\Users\\Sam\\Downloads\\export(4).csv");
 
             var boxSim = new BoxPullSimulation(1,ch.Cards);
 

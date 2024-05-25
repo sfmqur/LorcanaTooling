@@ -7,7 +7,7 @@ namespace LorcanaLogic
     {
         public string Name { get; }
 
-        public int Set { get; }
+        public int Set { get; } // for promo cards bit 0x010000, is active, illumineers quest 0x020000, 
 
         public int CardNo { get; }
 
@@ -62,6 +62,28 @@ namespace LorcanaLogic
             var crc = new Crc32();
             var hashingString = Encoding.ASCII.GetBytes($"{Name}{Set}{CardNo}{Color}{Rarity}");
             return (int)crc.Get(hashingString);
+        }
+
+
+        public static int GetSetFromString(string setString)
+        {
+            int set = 0; 
+            if (setString[0] == 'P')
+            {
+                set |= 0x010000; 
+                setString= setString[1..];
+            }
+            set |= int.Parse(setString);
+            return set; 
+        }
+
+        public static int GetCardNoFromString(string cardNoString)
+        {
+            if (cardNoString[0] == 'P')
+            {
+                cardNoString = cardNoString[1..];
+            }
+            return int.Parse(cardNoString);
         }
 
         public static bool operator <(Card card1, Card card2)

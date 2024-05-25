@@ -1,4 +1,6 @@
-﻿using LorcanaLogic.Contracts;
+﻿using System.Linq.Expressions;
+using Csv;
+using LorcanaLogic.Contracts;
 using Microsoft.VisualBasic.FileIO;
 
 namespace LorcanaLogic
@@ -47,40 +49,36 @@ namespace LorcanaLogic
             var lines = collectionFileToCleanLineArr(collectionFilePath);
             foreach (var line in lines)
             {
-                int cardNo;
-                var cardNoResult = Int32.TryParse(line[4], out cardNo);
+                var cardNo = Card.GetCardNoFromString(line[4]);
 
-                if (line[0] != "Normal" && cardNoResult)
+                var set = Card.GetSetFromString(line[3]);
+                if (!Cards.ContainsKey(set))
                 {
-                    var set = Int32.Parse(line[3]);
-                    if (!Cards.ContainsKey(set))
-                    {
-                        Cards[set] = new Dictionary<int, Card>();
-                    }
-                    decimal tempPrice;
-                    if (line[6][0..3] == "Sup")
-                    {
-                        line[6] = "SuperRare"; 
-                    }
-                    if (Cards[set].ContainsKey(cardNo))
-                    {
-                        Cards[set][cardNo].QuantNormal = Int32.Parse(line[0]);
-                        Cards[set][cardNo].QuantFoil = Int32.Parse(line[1]);
-                        Cards[set][cardNo].Price = decimal.TryParse(line[7], out tempPrice) ? tempPrice : 0;
-                        Cards[set][cardNo].PriceFoil = decimal.TryParse(line[8], out tempPrice) ? tempPrice : 0;
-                    }
-                    else
-                    {
-                        Cards[set][cardNo] = new Card(
-                        line[2], set, cardNo, //name, set, cardno
-                        (Color)Enum.Parse(typeof(Color), line[5]),
-                        (Rarity)Enum.Parse(typeof(Rarity), line[6]),
-                        Int32.Parse(line[0]), //quant norm
-                        Int32.Parse(line[1]), //quant foil
-                        decimal.TryParse(line[7], out tempPrice) ? tempPrice : 0, //price
-                        decimal.TryParse(line[8], out tempPrice) ? tempPrice : 0 // foil price
-                        );
-                    }
+                    Cards[set] = new Dictionary<int, Card>();
+                }
+                decimal tempPrice;
+                if (line[6][0..3] == "Sup")
+                {
+                    line[6] = "SuperRare";
+                }
+                if (Cards[set].ContainsKey(cardNo))
+                {
+                    Cards[set][cardNo].QuantNormal = Int32.Parse(line[0]);
+                    Cards[set][cardNo].QuantFoil = Int32.Parse(line[1]);
+                    Cards[set][cardNo].Price = decimal.TryParse(line[7], out tempPrice) ? tempPrice : 0;
+                    Cards[set][cardNo].PriceFoil = decimal.TryParse(line[8], out tempPrice) ? tempPrice : 0;
+                }
+                else
+                {
+                    Cards[set][cardNo] = new Card(
+                    line[2], set, cardNo, //name, set, cardno
+                    (Color)Enum.Parse(typeof(Color), line[5]),
+                    (Rarity)Enum.Parse(typeof(Rarity), line[6]),
+                    Int32.Parse(line[0]), //quant norm
+                    Int32.Parse(line[1]), //quant foil
+                    decimal.TryParse(line[7], out tempPrice) ? tempPrice : 0, //price
+                    decimal.TryParse(line[8], out tempPrice) ? tempPrice : 0 // foil price
+                    );
                 }
             }
         }
@@ -100,7 +98,7 @@ namespace LorcanaLogic
                 decimal sumPriceRemainingSet = 0;
                 foreach (var rarity in Enum.GetValues(typeof(Rarity)))
                 {
-                    var cardsKVPairs = Cards[set].Where(cardKVPair => cardKVPair.Value.Rarity == (Rarity) rarity);
+                    var cardsKVPairs = Cards[set].Where(cardKVPair => cardKVPair.Value.Rarity == (Rarity)rarity);
 
                     decimal sumTotalPrice = 0;
                     decimal sumPriceRemaining = 0;
@@ -113,14 +111,13 @@ namespace LorcanaLogic
                     sumTotalPriceSet += sumTotalPrice;
                     sumPriceRemainingSet += sumPriceRemaining;
 
-                    var tabstring = (Rarity)rarity == Rarity.Uncommon || (Rarity)rarity == Rarity.SuperRare 
+                    var tabstring = (Rarity)rarity == Rarity.Uncommon || (Rarity)rarity == Rarity.SuperRare
                         || (Rarity)rarity == Rarity.Legendary || (Rarity)rarity == Rarity.Enchanted ? "\t" : "\t\t";
-                    Console.WriteLine($"{(Rarity) rarity}:{tabstring}{sumTotalPrice}\t{sumPriceRemaining}");
+                    Console.WriteLine($"{(Rarity)rarity}:{tabstring}{sumTotalPrice}\t{sumPriceRemaining}");
                 }
-                
+
                 Console.WriteLine($"Total:\t\t{sumTotalPriceSet}\t{sumPriceRemainingSet}");
                 Console.WriteLine("");
-
             }
         }
 
@@ -137,23 +134,23 @@ namespace LorcanaLogic
             {
                 using (var fs = File.OpenText(collectionFilePath))
                 {
-                    string s = "";
-                    while ((s = fs.ReadLine()) != null)
+                    var rawLines = CsvReader.Read(fs);
+                    foreach (var csvline in rawLines)
                     {
-                        var lineArr = s.Split(',');
-                        if (lineArr[0] != "Normal") // do no changes if already clean, this breaks on empty cell
+                        var lineArr = csvline.Values.ToArray();
+                        specificCardCleanup(ref lineArr);
+
+                        if (lineArr[7].Contains('$'))
                         {
-                            if (lineArr[7].Contains('$'))
-                            {
-                                var dolSignInd = lineArr[7].IndexOf('$');
-                                lineArr[7] = lineArr[7].Substring(dolSignInd + 1, getNumberLength(lineArr[7], dolSignInd + 1));
-                            }
-                            if (lineArr[8].Contains('$'))
-                            {
-                                var dolSignInd = lineArr[8].IndexOf('$');
-                                lineArr[8] = lineArr[8].Substring(dolSignInd + 1, getNumberLength(lineArr[8], dolSignInd + 1));
-                            }
+                            var dolSignInd = lineArr[7].IndexOf('$');
+                            lineArr[7] = lineArr[7].Substring(dolSignInd + 1);
                         }
+                        if (lineArr[8].Contains('$'))
+                        {
+                            var dolSignInd = lineArr[8].IndexOf('$');
+                            lineArr[8] = lineArr[8].Substring(dolSignInd + 1);
+                        }
+
                         lines.Add(lineArr);
                     }
                 }
@@ -187,6 +184,18 @@ namespace LorcanaLogic
                 }
             }
             return length;
+        }
+
+        private void specificCardCleanup(ref string[] lineArr)
+        {
+            if (lineArr[2].StartsWith("I Find 'Em"))
+            {
+                var newArr = lineArr.ToList();
+                var name2 = newArr[3];
+                newArr.RemoveAt(3);
+                newArr[2] = $"{newArr[2]}, {name2}";
+                lineArr = newArr.ToArray();
+            }
         }
     }
 }
