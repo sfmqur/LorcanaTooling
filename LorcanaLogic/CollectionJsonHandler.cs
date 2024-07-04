@@ -1,5 +1,4 @@
-﻿using LorcanaLogic.Contracts;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace LorcanaLogic
 {

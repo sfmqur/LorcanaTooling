@@ -7,7 +7,7 @@ namespace LorcanaConsoleApp
         private static void Main(string[] args)
         {
             var ch = new CollectionHandler();
-            ch.LoadCollectionFile("C:\\Users\\Sam\\Downloads\\export(4).csv");
+            ch.LoadCollectionFile("C:\\Users\\Sam\\Downloads\\export.csv");
 
             for (var i = 1; i <= 4; i++)
             {

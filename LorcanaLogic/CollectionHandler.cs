@@ -1,7 +1,5 @@
-﻿using System.Linq.Expressions;
-using Csv;
+﻿using Csv;
 using LorcanaLogic.Contracts;
-using Microsoft.VisualBasic.FileIO;
 
 namespace LorcanaLogic
 {
@@ -188,13 +186,22 @@ namespace LorcanaLogic
 
         private void specificCardCleanup(ref string[] lineArr)
         {
-            if (lineArr[2].StartsWith("I Find 'Em"))
+            if (lineArr[2].StartsWith("Flotsam - Ursula's \"Baby\"") ||
+                lineArr[2].StartsWith("Jetsam - Ursula's \"Baby\""))
             {
-                var newArr = lineArr.ToList();
-                var name2 = newArr[3];
-                newArr.RemoveAt(3);
-                newArr[2] = $"{newArr[2]}, {name2}";
-                lineArr = newArr.ToArray();
+                var splitInd2 = lineArr[2].Split(',');
+                var newArr = new string[9] {
+               lineArr[0],
+                lineArr[1],
+                splitInd2[0],
+                splitInd2[1],
+                splitInd2[2],
+                splitInd2[3],
+                splitInd2[4],
+                splitInd2[5].Substring(1),
+                lineArr[3],
+            };
+                lineArr = newArr;
             }
         }
     }
