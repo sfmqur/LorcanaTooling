@@ -35,7 +35,7 @@ namespace LorcanaLogic.Contracts
                 case Rarity.Rare: return foil ? RareFoilPerBox : RaresPerBox;
                 case Rarity.SuperRare: return foil ? SuperRareFoilPerBox : SuperRaresPerBox;
                 case Rarity.Legendary: return foil ? LegendaryFoilPerBox : LegendarysPerBox;
-                case Rarity.Enchanted: return foil ? EnchantedPerBox : EnchantedPerBox;
+                case Rarity.Enchanted: return EnchantedPerBox;
                 default: return 0; 
             }
         }
