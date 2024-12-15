@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LorcanaLogic.Contracts", "L
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InkyTools", "InkyTools\InkyTools.csproj", "{D22B0A6D-7CA7-4E89-8BC8-36176B90E144}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InkyLonia", "InkyLonia\InkyLonia.csproj", "{C525C91B-57DB-46BD-ADE8-64326E71F5DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{D22B0A6D-7CA7-4E89-8BC8-36176B90E144}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D22B0A6D-7CA7-4E89-8BC8-36176B90E144}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D22B0A6D-7CA7-4E89-8BC8-36176B90E144}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C525C91B-57DB-46BD-ADE8-64326E71F5DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C525C91B-57DB-46BD-ADE8-64326E71F5DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C525C91B-57DB-46BD-ADE8-64326E71F5DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C525C91B-57DB-46BD-ADE8-64326E71F5DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
