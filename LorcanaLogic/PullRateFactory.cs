@@ -19,7 +19,7 @@ namespace LorcanaLogic
                 case 2: return _set3Rates;
                 case 3: return _set3Rates;
                 case 4: return _set3Rates;
-                default: throw new ArgumentException($"Invalid set: {set}");
+                default: return _set3Rates;
             }
         }
     }
