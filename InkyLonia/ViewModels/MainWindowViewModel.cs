@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using InkyLonia.Models;
@@ -20,9 +21,10 @@ public partial class MainWindowViewModel : ViewModelBase
   [ObservableProperty] private DeckPlaintext? _selectedConstDeck;
 
   private bool _deletePressed = false;
-  private bool _isLastSelectionConstDecks = false;
   private readonly string _dataFolder = @"\InkyLonia\DeckDiff";
-  private FileHandler _fileHandler; 
+  private readonly FileHandler _fileHandler;
+  private readonly DeckDiffHandler _diffHandler= new ();
+
   public MainWindowViewModel()
   {
     _dataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + _dataFolder;
@@ -30,9 +32,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
       Directory.CreateDirectory(_dataFolder);
     }
-    Decks.Add(new DeckPlaintext("ralph", "ra"));
-    Decks.Add(new DeckPlaintext("george", "ga"));
-    
+
     _fileHandler = new FileHandler(_dataFolder);
     OnOpen();
   }
@@ -42,7 +42,6 @@ public partial class MainWindowViewModel : ViewModelBase
     if (SelectedDeck is null) return;
     DeckName = SelectedDeck.Name;
     DeckList = SelectedDeck.Plaintext;
-    _isLastSelectionConstDecks = false;
     _deletePressed = false;
   }
 
@@ -51,7 +50,6 @@ public partial class MainWindowViewModel : ViewModelBase
     if (SelectedConstDeck is null) return;
     DeckName = SelectedConstDeck.Name;
     DeckList = SelectedConstDeck.Plaintext;
-    _isLastSelectionConstDecks = true;
     _deletePressed = false;
   }
 
@@ -61,23 +59,33 @@ public partial class MainWindowViewModel : ViewModelBase
     Decks = dto.DeckPlaintexts;
     ConstructedDecks = dto.ConstructedDeckPlaintexts;
   }
-  
+
   public void OnClose()
   {
     _fileHandler.SaveSettings(ConstructedDecks, Decks);
   }
-  
+
   [RelayCommand]
   private void SaveDeckList()
   {
     _deletePressed = false;
-    if (_isLastSelectionConstDecks)
+    var constDeckMatches = ConstructedDecks.Where(d => d.Name == DeckName);
+    var deckMatches = Decks.Where(d => d.Name == DeckName);
+    if (constDeckMatches.Any() || deckMatches.Any())
     {
+      foreach (var deck in constDeckMatches)
+      {
+        deck.Plaintext = DeckList;
+        deck.ProcessPlaintext();
+      }
+      foreach (var deck in deckMatches)
+      {
+        deck.Plaintext = DeckList;
+        deck.ProcessPlaintext();
+      }
+      return; 
     }
-    else
-    {
-      Decks.Add(new DeckPlaintext(DeckName, DeckList));
-    }
+    Decks.Add(new DeckPlaintext(DeckName, DeckList));
   }
 
   [RelayCommand]
