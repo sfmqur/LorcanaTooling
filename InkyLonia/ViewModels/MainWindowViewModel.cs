@@ -23,7 +23,7 @@ public partial class MainWindowViewModel : ViewModelBase
   private bool _deletePressed = false;
   private readonly string _dataFolder = @"\InkyLonia\DeckDiff";
   private readonly FileHandler _fileHandler;
-  private readonly DeckDiffHandler _diffHandler= new ();
+  private readonly DeckDiffHandler _diffHandler;
 
   public MainWindowViewModel()
   {
@@ -34,6 +34,7 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     _fileHandler = new FileHandler(_dataFolder);
+    _diffHandler = new DeckDiffHandler(Decks, ConstructedDecks);
     OnOpen();
   }
 
@@ -138,17 +139,20 @@ public partial class MainWindowViewModel : ViewModelBase
   private void DeckIntersection()
   {
     _deletePressed = false;
+    Output = _diffHandler.GenerateIntersections();
   }
 
   [RelayCommand]
   private void FullReport()
   {
     _deletePressed = false;
+    Output = _diffHandler.GenerateFullReport();
   }
 
   [RelayCommand]
   private void DeckDifference()
   {
     _deletePressed = false;
+    Output = _diffHandler.GenerateDiffs();
   }
 }
