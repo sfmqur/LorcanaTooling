@@ -4,13 +4,11 @@ namespace LorcanaLogic;
 
 public class DeckDiffHandler
 {
-  private readonly ObservableCollection<DeckPlaintext> _decks;
-  private readonly ObservableCollection<DeckPlaintext> _constDecks;
+  private readonly ObservableCollection<DeckPlaintext> _constructedDecks;
 
-  public DeckDiffHandler(ObservableCollection<DeckPlaintext> decks, ObservableCollection<DeckPlaintext> constDecks)
+  public DeckDiffHandler(ObservableCollection<DeckPlaintext> constructedDecks)
   {
-    _decks = decks;
-    _constDecks = constDecks;
+    _constructedDecks = constructedDecks;
   }
 
   /// <summary>
@@ -19,7 +17,8 @@ public class DeckDiffHandler
   /// <returns></returns>
   public string GenerateIntersections()
   {
-    
+    var output = "Intersection Report:\n";
+    return output;
   }
 
   /// <summary>
@@ -28,7 +27,8 @@ public class DeckDiffHandler
   /// <returns></returns>
   public string GenerateDiffs()
   {
-    
+    var output = "Differential Report:\n";
+    return output;
   }
 
   /// <summary>

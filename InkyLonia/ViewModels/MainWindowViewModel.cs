@@ -34,7 +34,7 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     _fileHandler = new FileHandler(_dataFolder);
-    _diffHandler = new DeckDiffHandler(Decks, ConstructedDecks);
+    _diffHandler = new DeckDiffHandler(ConstructedDecks);
     OnOpen();
   }
 
@@ -77,15 +77,15 @@ public partial class MainWindowViewModel : ViewModelBase
     {
       foreach (var deck in constDeckMatches)
       {
-        deck.Plaintext = DeckList;
-        deck.ProcessPlaintext();
+        UpdatePlaintext(deck);
       }
+
       foreach (var deck in deckMatches)
       {
-        deck.Plaintext = DeckList;
-        deck.ProcessPlaintext();
+        UpdatePlaintext(deck);
       }
-      return; 
+
+      return;
     }
 
     try
@@ -95,7 +95,7 @@ public partial class MainWindowViewModel : ViewModelBase
     }
     catch (Exception ex)
     {
-      Output = ex.Message;
+      Output = "Deck List Format Error:\n" + ex.Message;
     }
   }
 
@@ -154,5 +154,20 @@ public partial class MainWindowViewModel : ViewModelBase
   {
     _deletePressed = false;
     Output = _diffHandler.GenerateDiffs();
+  }
+
+  private void UpdatePlaintext(DeckPlaintext deck)
+  {
+    var oldtext = deck.Plaintext;
+    try
+    {
+      deck.Plaintext = DeckList;
+      deck.ProcessPlaintext();
+    }
+    catch (Exception e)
+    {
+      deck.Plaintext = oldtext;
+      Output = "DeckList Format Error:\n" + e.Message;
+    }
   }
 }
