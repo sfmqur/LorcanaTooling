@@ -5,7 +5,8 @@ public class DeckPlaintext
   public DeckPlaintext(string name, string plaintext)
   {
     Name = name;
-    Plaintext = plaintext;
+    Plaintext = plaintext.Trim();
+    ProcessPlaintext();
   }
 
   public string Name { get; }

@@ -69,6 +69,7 @@ public partial class MainWindowViewModel : ViewModelBase
   private void SaveDeckList()
   {
     _deletePressed = false;
+    DeckName = DeckName.Trim();
     var constDeckMatches = ConstructedDecks.Where(d => d.Name == DeckName);
     var deckMatches = Decks.Where(d => d.Name == DeckName);
     if (constDeckMatches.Any() || deckMatches.Any())
@@ -85,7 +86,16 @@ public partial class MainWindowViewModel : ViewModelBase
       }
       return; 
     }
-    Decks.Add(new DeckPlaintext(DeckName, DeckList));
+
+    try
+    {
+      var newDeck = new DeckPlaintext(DeckName, DeckList);
+      Decks.Add(newDeck);
+    }
+    catch (Exception ex)
+    {
+      Output = ex.Message;
+    }
   }
 
   [RelayCommand]
