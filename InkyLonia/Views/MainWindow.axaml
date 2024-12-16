@@ -7,7 +7,8 @@
         x:Class="InkyLonia.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="InkyLonia">
+        Title="InkyLonia"
+        Closed="TopLevel_OnClosed">
 
   <Design.DataContext>
     <!-- This only sets the DataContext for the previewer in an IDE,
@@ -21,6 +22,7 @@
       Grid.Column="0"
       Content="Constructed Decks:" />
     <ListBox
+      Name="ConstructedDecks"
       Grid.Row="0"
       Grid.Column="0"
       Grid.RowSpan="3"
@@ -28,13 +30,14 @@
       ItemsSource="{Binding ConstructedDecks}"
       SelectedItem="{Binding SelectedConstDeck}"
       SelectionChanged="ConstDeckSelectionChanged"
-      />
-      
+      GotFocus="ConstructedDecks_OnGotFocus"/>
+
     <Label
       Grid.Row="3"
       Grid.Column="0"
       Content="Decks:" />
     <ListBox
+      Name="Decks"
       Grid.Row="3"
       Grid.Column="0"
       Grid.RowSpan="3"
@@ -42,12 +45,14 @@
       ItemsSource="{Binding Decks}"
       SelectedItem="{Binding SelectedDeck}"
       SelectionChanged="DeckSelectionChanged"
-      />
+      GotFocus="Decks_OnGotFocus"/>
+
     <Label
       Grid.Row="0"
       Grid.Column="1"
       Content="Deck List (Plaintext):" />
     <TextBox
+      Name="DeckList"
       Grid.Row="0"
       Grid.Column="1"
       Grid.RowSpan="3"
@@ -60,6 +65,7 @@
       Grid.Column="3"
       Content="Output:" />
     <TextBox
+      Name="Output"
       Grid.Row="0"
       Grid.Column="3"
       Grid.RowSpan="3"
@@ -76,6 +82,7 @@
       HorizontalAlignment="Left"
       Content="Deck Name:" />
     <TextBox
+      Name="DeckName"
       Grid.Row="3"
       Grid.Column="1"
       Grid.ColumnSpan="2"
@@ -86,49 +93,57 @@
       Margin="100,10,10,10"
       Text="{Binding DeckName}" />
     <Button
+      Name="ConstructDeck"
       Grid.Row="4"
       Grid.Column="1"
-      Margin="10"
-      Content="Save Decklist"
-      Command="{Binding SaveDeckListCommand}"/>
-    <Button
-      Grid.Row="5"
-      Grid.Column="1"
-      Margin="10"
-      Content="Delete Decklist" 
-      Command="{Binding DeleteDeckListCommand}"/>
-    <Button
-      Grid.Row="4"
-      Grid.Column="2"
       Margin="10"
       HorizontalAlignment="Left"
-      Content="Construct Deck" 
-      Command="{Binding ConstructDeckCommand}"/>
+      Content="Construct Deck"
+      Command="{Binding ConstructDeckCommand}" />
     <Button
+      Name="DeconstructDeck"
       Grid.Row="5"
-      Grid.Column="2"
+      Grid.Column="1"
       Margin="10"
       HorizontalAlignment="Left"
       Content="Deconstruct Deck"
-      Command="{Binding DeconstructDeckCommand}"/>
-    
+      Command="{Binding DeconstructDeckCommand}" />
     <Button
+      Name="SaveDeckList"
+      Grid.Row="4"
+      Grid.Column="2"
+      Margin="10"
+      Content="Save Decklist"
+      Command="{Binding SaveDeckListCommand}" />
+    <Button
+      Name="DelDecklist"
+      Grid.Row="5"
+      Grid.Column="2"
+      Margin="10"
+      Content="Delete Decklist"
+      Command="{Binding DeleteDeckListCommand}" />
+
+
+    <Button
+      Name="DeckIntersection"
       Grid.Row="4"
       Grid.Column="3"
       Margin="10"
-      Content="Deck Intersections" 
-      Command="{Binding DeckIntersectionCommand}"/>
+      Content="Deck Intersections"
+      Command="{Binding DeckIntersectionCommand}" />
     <Button
+      Name="DeckDifference"
       Grid.Row="4"
       Grid.Column="4"
       Margin="10"
-      Content="Deck Difference" 
-      Command="{Binding DeckDifferenceCommand}"/>
+      Content="Deck Difference"
+      Command="{Binding DeckDifferenceCommand}" />
     <Button
+      Name="FullReport"
       Grid.Row="5"
       Grid.Column="3"
       Margin="10"
-      Content="Full Report" 
-      Command="{Binding FullReportCommand}"/>
+      Content="Full Report"
+      Command="{Binding FullReportCommand}" />
   </Grid>
 </Window>
