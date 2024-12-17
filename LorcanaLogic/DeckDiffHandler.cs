@@ -62,7 +62,7 @@ public class DeckDiffHandler
       var quantity1 = deck1.Cards.FirstOrDefault(card => card.Name == intersection.Name)?.Count;
       var quantity2 = deck2.Cards.FirstOrDefault(card => card.Name == intersection.Name)?.Count;
       var quantity = quantity1 < quantity2 ? quantity1 : quantity2;
-      output += $"\t\t{quantity} {intersection}\n";
+      output += $"\t\t{quantity}/{quantity1} {intersection}\n";
     }
 
     return output;
