@@ -139,21 +139,18 @@ public partial class MainWindowViewModel : ViewModelBase
   private void DeckIntersection()
   {
     _deletePressed = false;
+    _diffHandler.ConstructedDecks = ConstructedDecks;
     Output = _diffHandler.GenerateIntersections();
-  }
-
-  [RelayCommand]
-  private void FullReport()
-  {
-    _deletePressed = false;
-    Output = _diffHandler.GenerateFullReport();
   }
 
   [RelayCommand]
   private void DeckDifference()
   {
     _deletePressed = false;
-    Output = _diffHandler.GenerateDiffs();
+    _diffHandler.ConstructedDecks = ConstructedDecks;
+    if (SelectedDeck is null) return;
+    if (SelectedConstDeck is null) return;
+    Output = _diffHandler.GenerateDiffs(SelectedDeck, SelectedConstDeck);
   }
 
   private void UpdatePlaintext(DeckPlaintext deck)

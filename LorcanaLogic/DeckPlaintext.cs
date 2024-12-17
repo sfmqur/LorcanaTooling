@@ -11,7 +11,8 @@ public class DeckPlaintext
 
   public string Name { get; }
   public string Plaintext { get; set; }
-  public List<(int, string)> Cards { get; } = [];
+  
+  public List<CardCount> Cards { get; } = [];
 
   public void ProcessPlaintext(string plaintext)
   {
@@ -32,7 +33,7 @@ public class DeckPlaintext
       int numCards;
       var parseSuccess = int.TryParse(number, out numCards);
       if (!parseSuccess) throw new FormatException($"Invalid card count integer Format on line {i + 1}: {splitLines[i]}");
-      Cards.Add((numCards, cardName));
+      Cards.Add(new CardCount(cardName, numCards));
     }
   }
 
