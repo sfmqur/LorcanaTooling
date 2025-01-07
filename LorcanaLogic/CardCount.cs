@@ -13,9 +13,8 @@ public class CardCount : IEquatable<CardCount>
 
   public override string ToString()
   {
-    return Name;
+    return Count + " " + Name;
   }
-
 
   public bool Equals(CardCount? other)
   {
