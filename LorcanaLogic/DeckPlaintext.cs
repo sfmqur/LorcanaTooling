@@ -22,6 +22,7 @@ public class DeckPlaintext
 
   public void ProcessPlaintext()
   {
+    Cards.Clear();
     var splitLines = Plaintext.Split('\n');
     for (var i = 0; i < splitLines.Length; i++)
     {
